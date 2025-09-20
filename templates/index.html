@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Badminton Scoreboard with MediaPipe</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <h1>Badminton Court Scoreboard</h1>
+        <div class="controls">
+          <div class="camera-controls">
+            <button id="startCamera">Start Camera</button>
+            <button id="closeCamera">Close Camera</button>
+          </div>
+          <span class="hint">Show a thumbs-up ("yay") to score!</span>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="court" aria-label="Badminton Court">
+          <div class="side side-left" id="sideLeft">
+            <div class="scoreboard">
+              <div class="score" id="scoreLeft">0</div>
+              <div class="score-buttons">
+                <button class="btn" id="leftUp" aria-label="Left score up">▲</button>
+                <button class="btn" id="leftDown" aria-label="Left score down">▼</button>
+              </div>
+            </div>
+            <div class="quadrants">
+              <div class="name-row top">
+                <span class="serve" id="serveLT" aria-hidden="true">🏸</span>
+                <input class="name-input" id="nameLT" placeholder="Player" />
+              </div>
+              <div class="name-row bottom">
+                <span class="serve" id="serveLB" aria-hidden="true">🏸</span>
+                <input class="name-input" id="nameLB" placeholder="Player" />
+              </div>
+            </div>
+          </div>
+          <button class="swap-btn" id="swapSides" title="Swap sides" aria-label="Swap sides">⟲</button>
+          <div class="net" aria-hidden="true"></div>
+          <div class="side side-right" id="sideRight">
+            <div class="scoreboard">
+              <div class="score" id="scoreRight">0</div>
+              <div class="score-buttons">
+                <button class="btn" id="rightUp" aria-label="Right score up">▲</button>
+                <button class="btn" id="rightDown" aria-label="Right score down">▼</button>
+              </div>
+            </div>
+            <div class="quadrants">
+              <div class="name-row top">
+                <span class="serve" id="serveRT" aria-hidden="true">🏸</span>
+                <input class="name-input" id="nameRT" placeholder="Player" />
+              </div>
+              <div class="name-row bottom">
+                <span class="serve" id="serveRB" aria-hidden="true">🏸</span>
+                <input class="name-input" id="nameRB" placeholder="Player" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="video-section">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>MediaPipe Hands runs in your browser. No video uploaded.</div>
+      </footer>
+    </div>
+
+    <script type="module" src="/static/main.js"></script>
+  </body>
+    
+    <!-- Load MediaPipe classic libraries via script tags to avoid dynamic import issues -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+  </html>
+
+
