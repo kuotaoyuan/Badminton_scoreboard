@@ -118,6 +118,14 @@ function whichSideOfFrame(handLandmarks, videoWidth) {
 // - Thumb up: thumb tip above wrist (y smaller)
 // - Other fingertips curled or below MCPs
 // Coordinates are normalized [0,1] with origin top-left.
+function angleFormula(v1, v2) {
+  const dot = v1[0] * v2[0] + v1[1] * v2[1];
+  const length = Math.sqrt(v1[0] ** 2 + v1[1] ** 2) * Math.sqrt(v2[0] ** 2 + v2[1] ** 2);
+  if (length === 0) return 0;
+  const cosAngle = Math.max(-1, Math.min(1, dot / length)); // Clamp to avoid NaN
+  return Math.acos(cosAngle);
+}
+
 function isThumbsUp(landmarks) {
   if (!landmarks || landmarks.length < 21) return false;
   const WRIST = 0;
@@ -126,30 +134,49 @@ function isThumbsUp(landmarks) {
   const MIDDLE_TIP = 12;
   const RING_TIP = 16;
   const PINKY_TIP = 20;
+  const THUMB_MCP = 2;
   const INDEX_MCP = 5;
   const MIDDLE_MCP = 9;
   const RING_MCP = 13;
   const PINKY_MCP = 17;
 
+  const wristX = landmarks[WRIST].x;
+  const thumbTipX = landmarks[THUMB_TIP].x;
+  const indexTipX = landmarks[INDEX_TIP].x;
+  const middleTipX = landmarks[MIDDLE_TIP].x;
+  const ringTipX = landmarks[RING_TIP].x;
+  const pinkyTipX = landmarks[PINKY_TIP].x;
+  
   const wristY = landmarks[WRIST].y;
   const thumbTipY = landmarks[THUMB_TIP].y;
-
   const indexTipY = landmarks[INDEX_TIP].y;
   const middleTipY = landmarks[MIDDLE_TIP].y;
   const ringTipY = landmarks[RING_TIP].y;
   const pinkyTipY = landmarks[PINKY_TIP].y;
 
+  const thumbMcpX = landmarks[THUMB_MCP].x;
+  const indexMcpX = landmarks[INDEX_MCP].x;
+  const middleMcpX = landmarks[MIDDLE_MCP].x;
+  const ringMcpX = landmarks[RING_MCP].x;
+  const pinkyMcpX = landmarks[PINKY_MCP].x;
+
+  const thumbMcpY = landmarks[THUMB_MCP].y;
   const indexMcpY = landmarks[INDEX_MCP].y;
   const middleMcpY = landmarks[MIDDLE_MCP].y;
   const ringMcpY = landmarks[RING_MCP].y;
   const pinkyMcpY = landmarks[PINKY_MCP].y;
 
-  const thumbUp = thumbTipY < wristY - 0.05; // margin to reduce noise
+
+  const thumbUp = angleFormula(
+    [thumbTipX - wristX, thumbTipY - wristY],
+    [thumbMcpX - thumbTipX, thumbMcpY - thumbTipY]
+  ) > Math.PI / 2;
+  
   const othersCurled =
-    indexTipY > indexMcpY - 0.02 &&
-    middleTipY > middleMcpY - 0.02 &&
-    ringTipY > ringMcpY - 0.02 &&
-    pinkyTipY > pinkyMcpY - 0.02;
+    angleFormula([indexTipX - wristX, indexTipY - wristY], [indexMcpX - indexTipX, indexMcpY - indexTipY]) < Math.PI / 2 &&
+    angleFormula([middleTipX - wristX, middleTipY - wristY], [middleMcpX - middleTipX, middleMcpY - middleTipY]) < Math.PI / 2 &&
+    angleFormula([ringTipX - wristX, ringTipY - wristY], [ringMcpX - ringTipX, ringMcpY - ringTipY]) < Math.PI / 2 &&
+    angleFormula([pinkyTipX - wristX, pinkyTipY - wristY], [pinkyMcpX - pinkyTipX, pinkyMcpY - pinkyTipY]) < Math.PI / 2;
 
   return thumbUp && othersCurled;
 }
