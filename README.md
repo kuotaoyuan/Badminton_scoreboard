@@ -1,4 +1,5 @@
 # Badminton Scoreboard Website (MediaPipe Hands)
+You can vist https://badminton-scoreboard-0qle.onrender.com/ to use the app.
 
 This web app shows a badminton court with Red and Blue sides, scoreboards for each side, and uses your webcam with MediaPipe Hands to detect a thumbs-up ("yay") gesture. A detected thumbs-up on the left half of the frame increments Red's score; on the right half increments Blue's score. Manual up/down buttons are also available.
 
@@ -23,7 +24,7 @@ This web app shows a badminton court with Red and Blue sides, scoreboards for ea
    pip install flask
    ```
 
-## Run
+## Run it Locally
 ```bash
 python app.py
 ```
